@@ -1335,7 +1335,7 @@ case "${host}" in
     ;;
   aarch64-*-darwin* | arm64*-*-darwin*)
     ;;
-  *-*-darwin*)
+  i?86-*-darwin[[89]]* | i?86-*-darwin1[[0-7]]* | powerpc*-*-darwin*)
     host_makefile_frag="config/mh-darwin"
     ;;
   powerpc-*-aix*)
