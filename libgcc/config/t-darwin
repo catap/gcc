@@ -29,6 +29,12 @@ libemutls_w.a: emutls.o
 d10-uwfef.o: $(srcdir)/config/darwin10-unwind-find-enc-func.c
 	$(crt_compile) -mmacosx-version-min=10.6 -c $<
 
+# Using this crt as a library means that it will not be added to an exe
+# (or module) unless needed.
+libd10-uwfef.a: d10-uwfef.o
+	$(AR_CREATE_FOR_TARGET) $@ d10-uwfef.o
+	$(RANLIB_FOR_TARGET) $@
+
 # Start with an empty list and allow the arch-specific t-darwin files to add in
 # any extras, with the main set added by t-slibgcc-darwin.
 SHLIB_MAPFILES =
