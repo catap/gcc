@@ -3,3 +3,6 @@ LIB2ADD = $(srcdir)/config/darwin-64.c
 LIB2FUNCS_EXCLUDE = _fixtfdi _fixunstfdi _floatditf _floatunditf
 
 SHLIB_MAPFILES += $(srcdir)/config/$(cpu_type)/libgcc-darwin.ver
+
+# Build a legacy libgcc_s.1
+BUILD_LIBGCCS1 = YES
