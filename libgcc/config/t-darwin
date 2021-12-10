@@ -27,7 +27,7 @@ libemutls_w.a: emutls_s.o
 # Patch to __Unwind_Find_Enclosing_Function for Darwin10.
 # This has to be built for 10.6, even if the toolchain will not target that
 # version
-d10-uwfef.o: $(srcdir)/config/darwin10-unwind-find-enc-func.c
+d10-uwfef.o: $(srcdir)/config/darwin10-unwind-find-enc-func.c libgcc_tm.h
 	$(crt_compile) -mmacosx-version-min=10.6 -c $<
 
 # Using this crt as a library means that it will not be added to an exe
