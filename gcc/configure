@@ -17336,7 +17336,7 @@ else
     # We cannot build and test reliably on macOS 10.11+ (Darwin15+) without use
     # of rpaths, since runpaths set via DYLD_LIBRARY_PATH are elided by key
     # system executables (e.g. /bin/sh).  Force rpaths on for these systems.
-      UNSET,darwin1[56789]*|UNSET,darwin20*|10.1[123456789][,.]*|11.*[,.]* )
+      UNSET,darwin1[56789]*|UNSET,darwin2*|10.1[123456789][,.]*|11.*[,.]* )
       echo "@rpath library names are needed on macOS versions later than 10.11 (rpaths enabled)" 1>&5
       enable_darwin_at_rpath=yes
       ;;
@@ -20193,7 +20193,7 @@ else
     # We cannot build and test reliably on macOS 10.11+ (Darwin15+) without use
     # of rpaths, since runpaths set via DYLD_LIBRARY_PATH are elided by key
     # system executables (e.g. /bin/sh).  Force rpaths on for these systems.
-      UNSET,darwin1[56789]*|UNSET,darwin20*|10.1[123456789][,.]*|11.*[,.]* )
+      UNSET,darwin1[56789]*|UNSET,darwin2*|10.1[123456789][,.]*|11.*[,.]* )
       echo "@rpath library names are needed on macOS versions later than 10.11 (rpaths enabled)" 1>&5
       enable_darwin_at_rpath=yes
       ;;
@@ -29540,7 +29540,7 @@ if test "x$enable_darwin_at_rpath" = "xyes"; then
   #
   case "$target" in
     # It is valid for targets from Darwin9.
-    *-darwin20* | *-darwin1[0-9]* | *-darwin9*)
+    *-darwin2* | *-darwin1[0-9]* | *-darwin9*)
       tm_defines="$tm_defines USE_DEFAULT_RPATH "
       ;;
   esac
@@ -29548,7 +29548,7 @@ elif test "x$enable_darwin_at_rpath" = "x"; then
   # Match the default from libtool (we need the macro for tm.h)
   case "$target" in
     # It is default for targets from Darwin15.
-    *-darwin20* | *-darwin1[5-9]*)
+    *-darwin2* | *-darwin1[5-9]*)
       tm_defines="$tm_defines USE_DEFAULT_RPATH "
       ;;
   esac

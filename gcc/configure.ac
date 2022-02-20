@@ -5845,7 +5845,7 @@ if test "x$enable_darwin_at_rpath" = "xyes"; then
   # 
   case "$target" in
     # It is valid for targets from Darwin9.
-    *-darwin20* | *-darwin1[[0-9]]* | *-darwin9*)
+    *-darwin2* | *-darwin1[[0-9]]* | *-darwin9*)
       tm_defines="$tm_defines USE_DEFAULT_RPATH "
       ;;
   esac
@@ -5853,7 +5853,7 @@ elif test "x$enable_darwin_at_rpath" = "x"; then
   # Match the default from libtool (we need the macro for tm.h)
   case "$target" in
     # It is default for targets from Darwin15.
-    *-darwin20* | *-darwin1[[5-9]]*)
+    *-darwin2* | *-darwin1[[5-9]]*)
       tm_defines="$tm_defines USE_DEFAULT_RPATH "
       ;;
   esac
