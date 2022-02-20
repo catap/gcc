@@ -249,7 +249,7 @@ case ${host} in
     echo "enable_darwin_at_rpath is '$enable_darwin_at_rpath'" 1>&2
   fi
   case ${host} in
-    *-*-darwin20* | *-*-darwin1[89]*)
+    *-*-darwin2* | *-*-darwin1[89]*)
       tmake_file="t-darwin-min-8 $tmake_file"
       ;;
     *-*-darwin9* | *-*-darwin1[0-7]*)
