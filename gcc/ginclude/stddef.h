@@ -217,6 +217,7 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
 #if defined (__FreeBSD__) \
   || defined(__DragonFly__) \
   || defined(__FreeBSD_kernel__) \
+  || defined(__OpenBSD__) \
   || defined(__VMS__)
 /* __size_t is a typedef, must not trash it.  */
 #else

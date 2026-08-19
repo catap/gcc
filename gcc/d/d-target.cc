@@ -488,7 +488,7 @@ tree
 d_handle_target_cpp_runtime_library (void)
 {
   /* The driver only ever optionally links to libstdc++.  */
-  const char *libstdcxx = "libstdc++";
+  const char *libstdcxx = "libestdc++";
   return build_string_literal (strlen (libstdcxx) + 1, libstdcxx);
 }
 

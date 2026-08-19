@@ -63,6 +63,7 @@ extern rtx sparc_legitimize_reload_address (rtx, machine_mode, int, int,
 extern void load_got_register (void);
 extern void sparc_emit_call_insn (rtx, rtx);
 extern void sparc_defer_case_vector (rtx, rtx, int);
+extern rtx sparc_pic_case_vector_address (rtx);
 extern bool sparc_expand_move (machine_mode, rtx *);
 extern void sparc_emit_set_symbolic_const64 (rtx, rtx, rtx);
 extern int sparc_split_reg_mem_legitimate (rtx, rtx);

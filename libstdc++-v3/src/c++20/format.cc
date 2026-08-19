@@ -189,8 +189,9 @@ __with_encoding_conversion(const locale& loc)
   // just don't delete[] it in the locale(locale, Facet*) constructor.
   if (const char* name = loc._M_impl->_M_names[0])
     {
-      loc2._M_impl->_M_names[0] = new char[strlen(name) + 1];
-      strcpy(loc2._M_impl->_M_names[0], name);
+      size_t sz = strlen(name) + 1;
+      loc2._M_impl->_M_names[0] = new char[sz];
+      strlcpy(loc2._M_impl->_M_names[0], name, sz);
     }
   return loc2;
 }

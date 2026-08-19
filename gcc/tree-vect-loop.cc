@@ -61,6 +61,8 @@ along with GCC; see the file COPYING3.  If not see
 #include "opts.h"
 #include "hierarchical_discriminator.h"
 
+#define vec_step vec_step_
+
 /* Loop Vectorization Pass.
 
    This pass tries to vectorize loops.

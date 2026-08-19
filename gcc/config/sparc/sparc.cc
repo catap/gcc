@@ -48,6 +48,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "varasm.h"
 #include "output.h"
 #include "insn-attr.h"
+#include "flags.h"
 #include "explow.h"
 #include "expr.h"
 #include "debug.h"
@@ -2285,6 +2286,16 @@ can_use_mov_pic_label_ref (rtx label)
     return false;
 
   return true;
+}
+
+rtx
+sparc_pic_case_vector_address (rtx address)
+{
+  gcc_assert (GET_CODE (address) == PLUS
+	      && LABEL_REF_P (XEXP (address, 1)));
+
+  LABEL_REF_NONLOCAL_P (XEXP (address, 1)) = 1;
+  return memory_address (CASE_VECTOR_MODE, address);
 }
 
 /* Expand a move instruction.  Return true if all work is done.  */
@@ -6207,6 +6218,9 @@ sparc_flat_expand_prologue (void)
 				         sparc_frame_base_offset
 					   - sparc_apparent_frame_size,
 					 SORR_SAVE);
+
+  if (warn_stack_larger_than && size > stack_larger_than_size)
+    warning (OPT_Wstack_larger_than_, "stack usage is %lld bytes", size);
 
   /* Advertise that the data calculated just above are now valid.  */
   sparc_prologue_data_valid_p = true;

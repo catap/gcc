@@ -1073,14 +1073,14 @@ namespace
 	  {
 	    // strfromf128 unfortunately doesn't allow .*
 	    char fmt[3 * sizeof(int) + 6];
-	    sprintf(fmt, "%%.%d%c", args..., int(format_string[4]));
+	    snprintf(fmt, sizeof(fmt), "%%.%d%c", args..., int(format_string[4]));
 	    len = __strfromf128(buffer, length, fmt, value);
 	  }
       }
     else
 #endif
 #endif
-    len = sprintf(buffer, format_string, args..., value);
+    len = snprintf(buffer, length, format_string, args..., value);
 
 #if _GLIBCXX_USE_C99_FENV_TR1 && defined(FE_TONEAREST)
     if (saved_rounding_mode != FE_TONEAREST)

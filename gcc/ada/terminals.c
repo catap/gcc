@@ -1125,7 +1125,7 @@ __gnat_setup_winsize (void *desc ATTRIBUTE_UNUSED,
 #if defined (__hpux__)
 #   include <sys/stropts.h>
 #endif
-#if defined (__APPLE__)
+#if defined (__APPLE__) || defined(__OpenBSD__)
 #   include <util.h>
 #endif
 #if defined (__FreeBSD__)

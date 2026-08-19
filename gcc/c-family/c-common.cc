@@ -733,7 +733,7 @@ finish_fname_decls (void)
 /* Return the text name of the current function, suitably prettified
    by PRETTY_P.  Return string must be freed by caller.  */
 
-const char *
+extern "C" const char *
 fname_as_string (int pretty_p)
 {
   const char *name = "top level";

@@ -94,7 +94,12 @@ package
     {
         version = AlignFiberStackTo16Byte;
 
-        version (GNU_CET)
+        version (OpenBSD)
+        {
+            version = AsmExternal;
+            version = AsmX86_64_Posix;
+        }
+        else version (GNU_CET)
         {
             // fiber_switchContext does not support shadow stack from
             // Intel CET.  So use ucontext implementation.
@@ -127,6 +132,7 @@ package
         {
             version = AsmPPC_Posix;
             version = AsmExternal;
+            version = AlignFiberStackTo16Byte;
         }
     }
     else version (PPC64)
@@ -139,6 +145,8 @@ package
         }
         else version (Posix)
         {
+            version = AsmPPC_Posix;
+            version = AsmExternal;
             version = AlignFiberStackTo16Byte;
         }
     }
@@ -156,6 +164,7 @@ package
         {
             version = AsmMIPS_N64_Posix;
             version = AsmExternal;
+            version = AlignFiberStackTo16Byte;
         }
     }
     else version (AArch64)
@@ -182,7 +191,21 @@ package
     }
     else version (SPARC64)
     {
+        version (Posix)
+        {
+            version = AsmSPARC64_Posix;
+            version = AsmExternal;
+        }
         version = AlignFiberStackTo16Byte;
+    }
+    else version (RISCV64)
+    {
+        version (Posix)
+        {
+            version = AsmRISCV64_Posix;
+            version = AsmExternal;
+            version = AlignFiberStackTo16Byte;
+        }
     }
     else version (LoongArch64)
     {
@@ -228,6 +251,12 @@ package
     {
         extern (C) void fiber_switchContext( void** oldp, void* newp ) nothrow @nogc;
         version (AArch64)
+            extern (C) void fiber_trampoline() nothrow;
+        version (MIPS_N64)
+            extern (C) void fiber_trampoline() nothrow;
+        version (SPARC64)
+            extern (C) void fiber_trampoline() nothrow;
+        version (RISCV64)
             extern (C) void fiber_trampoline() nothrow;
     }
     else
@@ -1094,27 +1123,22 @@ protected:
         }
         else version (AsmPPC_Posix)
         {
-            version (StackGrowsDown)
+            version (StackGrowsDown) {} else static assert (false);
+
+            version (PPC64)
             {
-                pstack -= int.sizeof * 5;
+                pstack -= size_t.sizeof * 5;
+                push( cast(size_t) &fiber_entryPoint);  // link register
+                push( 0x00000000_00000000 );            // condition register
+                push( 0x00000000_00000000 );            // old stack pointer
+                pstack -= size_t.sizeof * 18;           // GPRs
             }
             else
             {
-                pstack += int.sizeof * 5;
-            }
-
-            push( cast(size_t) &fiber_entryPoint );     // link register
-            push( 0x00000000 );                         // control register
-            push( 0x00000000 );                         // old stack pointer
-
-            // GPR values
-            version (StackGrowsDown)
-            {
-                pstack -= int.sizeof * 20;
-            }
-            else
-            {
-                pstack += int.sizeof * 20;
+                pstack -= size_t.sizeof * 6;
+                push( cast(size_t) &fiber_entryPoint);  // link register
+                push( 0x00000000 );                     // old stack pointer
+                pstack -= size_t.sizeof * 20;           // GPRs and CR
             }
 
             assert( (cast(size_t) pstack & 0x0f) == 0 );
@@ -1195,10 +1219,10 @@ protected:
              *     |-----------|<= frame pointer
              *     |  $fp/$gp  |
              *     |   $s0-7   |
-             *     |-----------|<= stack pointer
+             *     |-----------|<= tstack
              *     |    $ra    |
              *     |  $f24-31  |
-             *     |-----------|
+             *     |-----------|<= stack pointer
              *
              */
             enum SZ_GP = 10 * size_t.sizeof; // $fp + $gp + $s0-7
@@ -1214,11 +1238,13 @@ protected:
 
             enum BELOW = SZ_FP + SZ_RA;
             enum ABOVE = SZ_GP;
-            enum SZ = BELOW + ABOVE;
+            enum TSTACK_OFFSET = (BELOW + 15) / 16 * 16;
+            enum FRAME_SIZE = TSTACK_OFFSET + ABOVE;
 
-            (cast(ubyte*)pstack - SZ)[0 .. SZ] = 0;
+            (cast(ubyte*)pstack - FRAME_SIZE)[0 .. FRAME_SIZE] = 0;
             pstack -= ABOVE;
-            *cast(size_t*)(pstack - SZ_RA) = cast(size_t)&fiber_entryPoint;
+            *cast(size_t*)pstack = cast(size_t)&fiber_entryPoint; // $s0
+            *cast(size_t*)(pstack - SZ_RA) = cast(size_t)&fiber_trampoline;
         }
         else version (AsmLoongArch64_Posix)
         {
@@ -1267,6 +1293,46 @@ protected:
             pstack -= size_t.sizeof * 11;    // skip past x19-x29
             push(cast(size_t) &fiber_trampoline); // see threadasm.S for docs
             pstack += size_t.sizeof;         // adjust sp (newp) above lr
+        }
+        else version (AsmSPARC64_Posix)
+        {
+            // FP regs and return address kept below tstack to hide from GC.
+            // See switchcontext.S for frame layout. tstack points to %l0.
+            //   [0-127]   - reserved (register window save area)
+            //   [RSA+0]   - %o7 (return address)
+            //   [RSA+8]   - %f32-%f62
+            //   [RSA+136] - %l0-%l7  <-- tstack
+            //   [RSA+200] - %i0-%i7
+
+            version (StackGrowsDown) {}
+            else
+                static assert(false, "Only full descending stacks supported on SPARC64");
+
+            enum RSA = 128;
+            enum FRAME_SIZE = 400;
+            enum TSTACK_OFFSET = RSA + 136;
+
+            (cast(ubyte*)pstack - (FRAME_SIZE + RSA))[0 .. FRAME_SIZE + RSA] = 0;
+            pstack -= FRAME_SIZE + RSA;
+            *cast(size_t*)(pstack + RSA) = cast(size_t) &fiber_trampoline - 8;
+            pstack += TSTACK_OFFSET;
+        }
+        else version (AsmRISCV64_Posix)
+        {
+            // FP regs and return address are kept below tstack to hide from GC.
+            // See switchcontext.S for frame layout. tstack points to s0.
+            version (StackGrowsDown) {}
+            else
+                static assert(false, "Only full descending stacks supported on RISCV64");
+
+            enum FRAME_SIZE = 208;
+            enum TSTACK_OFFSET = 112;
+            enum RA_OFFSET = 96;
+
+            (cast(ubyte*)pstack - FRAME_SIZE)[0 .. FRAME_SIZE] = 0;
+            pstack -= FRAME_SIZE;
+            *cast(size_t*)(pstack + RA_OFFSET) = cast(size_t) &fiber_trampoline;
+            pstack += TSTACK_OFFSET;
         }
         else version (AsmARM_Posix)
         {

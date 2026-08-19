@@ -190,9 +190,27 @@ else version (OpenBSD)
         enum _STACKALIGNBYTES = 15;
         enum _MAX_PAGE_SHIFT = 12;
     }
+    else version (MIPS64)
+    {
+        enum _ALIGNBYTES = 7;
+        enum _STACKALIGNBYTES = 15;
+        enum _MAX_PAGE_SHIFT = 14;
+    }
     else version (PPC)
     {
         enum _ALIGNBYTES = 7;
+        enum _STACKALIGNBYTES = 15;
+        enum _MAX_PAGE_SHIFT = 12;
+    }
+    else version (PPC64)
+    {
+        enum _ALIGNBYTES = 7;
+        enum _STACKALIGNBYTES = 15;
+        enum _MAX_PAGE_SHIFT = 12;
+    }
+    else version (RISCV64)
+    {
+        enum _ALIGNBYTES = c_long.sizeof - 1;
         enum _STACKALIGNBYTES = 15;
         enum _MAX_PAGE_SHIFT = 12;
     }

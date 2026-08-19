@@ -3745,6 +3745,12 @@ int __gnat_set_thread_description(HANDLE h, char *descr, int length) {
 
 #endif /* defined (_WIN32) */
 
+const char *
+fname_as_string(int pretty_p __attribute__((__unused__)))
+{
+	return NULL;
+}
+
 #ifdef __cplusplus
 }
 #endif

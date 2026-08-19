@@ -45,6 +45,10 @@ public:
   void set (uint32_t d);
   void set (uint64_t d);
   void set (bool d);
+#if defined(__OpenBSD__) && defined(__LP64__)
+  void set (long d);
+  void set (unsigned long d);
+#endif
 
   /* Rvalue operators.  */
   bool to_bool () const;

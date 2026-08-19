@@ -1437,6 +1437,14 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define TARGET_VTABLE_USES_DESCRIPTORS 0
 #endif
 
+#ifndef PIE_DEFAULT
+#define PIE_DEFAULT 0
+#endif
+
+#ifndef CF_DEFAULT
+#define CF_DEFAULT CF_NONE
+#endif
+
 #endif /* GCC_INSN_FLAGS_H  */
 
 #ifndef DWARF_GNAT_ENCODINGS_DEFAULT

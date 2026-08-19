@@ -283,9 +283,17 @@ else version (OpenBSD)
     {
         enum _JBLEN = 100;
     }
+    else version (PPC64)
+    {
+        enum _JBLEN = 208;
+    }
     else version (MIPS64)
     {
         enum _JBLEN = 83;
+    }
+    else version (RISCV64)
+    {
+        enum _JBLEN = 32;
     }
     else version (SPARC)
     {
@@ -294,6 +302,10 @@ else version (OpenBSD)
     else version (SPARC64)
     {
         enum _JBLEN = 14;
+    }
+    else version (AArch64)
+    {
+        enum _JBLEN = 64;
     }
     else
         static assert(0);

@@ -869,7 +869,7 @@ namespace
   print_address(PrintContext& ctx, const char* fmt, const void* address)
   {
     char buf[128];
-    int written = __builtin_sprintf(buf, fmt, address);
+    int written = __builtin_snprintf(buf, sizeof buf, fmt, address);
     print_word(ctx, buf, written);
   }
 
@@ -881,7 +881,7 @@ namespace
   print_integer(PrintContext& ctx, long integer)
   {
     char buf[64];
-    int written = __builtin_sprintf(buf, "%ld", integer);
+    int written = __builtin_snprintf(buf, sizeof buf, "%ld", integer);
     print_word(ctx, buf, written);
   }
 
@@ -1264,7 +1264,7 @@ namespace
 
     PrintContext& ctx = *static_cast<PrintContext*>(data);
 
-    int written = __builtin_sprintf(buf, "%p ", (void*)pc);
+    int written = __builtin_snprintf(buf, sizeof buf, "%p ", (void*)pc);
     print_word(ctx, buf, written);
 
     int ret = 0;
@@ -1292,7 +1292,7 @@ namespace
 
 	if (lineno)
 	  {
-	    written = __builtin_sprintf(buf, ":%u\n", lineno);
+	    written = __builtin_snprintf(buf, sizeof buf, ":%u\n", lineno);
 	    print_word(ctx, buf, written);
 	  }
 	else
@@ -1315,7 +1315,7 @@ namespace
     if (errnum > 0)
       {
 	char buf[64];
-	int written = __builtin_sprintf(buf, " (errno=%d)\n", errnum);
+	int written = __builtin_snprintf(buf, sizeof buf, " (errno=%d)\n", errnum);
 	print_word(ctx, buf, written);
       }
     else

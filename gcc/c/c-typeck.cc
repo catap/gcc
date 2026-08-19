@@ -9152,7 +9152,7 @@ convert_for_assignment (location_t location, location_t expr_loc, tree type,
 		gcc_rich_location richloc (expr_loc, &rhs_label,
 					   highlight_colors::actual);
 		warned
-		  = permerror_opt (&richloc, OPT_Wincompatible_pointer_types,
+		  = pedwarn (&richloc, OPT_Wincompatible_pointer_types,
 				   "passing argument %d of %qE from "
 				   "incompatible pointer type",
 				   parmnum, rname);
@@ -9163,13 +9163,13 @@ convert_for_assignment (location_t location, location_t expr_loc, tree type,
 	    case ic_assign:
 	      if (bltin)
 		warned
-		  = permerror_opt (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn (location, OPT_Wincompatible_pointer_types,
 				   "assignment to %e from pointer to "
 				   "%qD with incompatible type %e",
 				   &e_type, bltin, &e_rhstype);
 	      else
 		warned
-		  = permerror_opt (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn (location, OPT_Wincompatible_pointer_types,
 				   "assignment to %e from incompatible "
 				   "pointer type %e",
 				   &e_type, &e_rhstype);
@@ -9178,13 +9178,13 @@ convert_for_assignment (location_t location, location_t expr_loc, tree type,
 	    case ic_init_const:
 	      if (bltin)
 		warned
-		  = permerror_init (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn_init (location, OPT_Wincompatible_pointer_types,
 				    "initialization of %e from pointer to "
 				    "%qD with incompatible type %e",
 				    &e_type, bltin, &e_rhstype);
 	      else
 		warned
-		  = permerror_init (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn_init (location, OPT_Wincompatible_pointer_types,
 				    "initialization of %e from incompatible "
 				    "pointer type %e",
 				    &e_type, &e_rhstype);
@@ -9192,13 +9192,13 @@ convert_for_assignment (location_t location, location_t expr_loc, tree type,
 	    case ic_return:
 	      if (bltin)
 		warned
-		  = permerror_opt (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn (location, OPT_Wincompatible_pointer_types,
 				   "returning pointer to %qD of type %e from "
 				   "a function with incompatible type %e",
 				   bltin, &e_rhstype, &e_type);
 	      else
 		warned
-		  = permerror_opt (location, OPT_Wincompatible_pointer_types,
+		  = pedwarn (location, OPT_Wincompatible_pointer_types,
 				   "returning %e from a function with "
 				   "incompatible return type %e",
 				   &e_rhstype, &e_type);

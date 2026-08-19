@@ -1060,8 +1060,6 @@ else version (OpenBSD)
     {
         IPPROTO_IPV6        = 41,
 
-        INET6_ADDRSTRLEN    = 46,
-
         IPV6_JOIN_GROUP     = 12,
         IPV6_LEAVE_GROUP    = 13,
         IPV6_MULTICAST_HOPS = 10,

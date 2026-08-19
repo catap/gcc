@@ -1380,6 +1380,11 @@ gfc_maybe_initialize_eh (void)
   using_eh_for_cleanups ();
 }
 
+extern "C" const char *
+fname_as_string(int pretty_p __attribute__((__unused__)))
+{
+	return NULL;
+}
 
 #include "gt-fortran-f95-lang.h"
 #include "gtype-fortran.h"
